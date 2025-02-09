@@ -46,13 +46,10 @@ export const putUserService = async (id: string, userData: Partial<IUser>) => {
 };
 
 export const registerUserService = async (userData: IUser) => {
-  console.log('Iniciando registro:', userData);
   const [ existingUser, existingDni ] = await Promise.all([
     userRepository.findOne({ where: { email: userData.email } }),
     userRepository.findOne({ where: { dni: userData.dni } }),
   ]);
-  console.log('Usuario existente:', existingUser);
-  console.log('DNI existente:', existingDni);
   if (existingUser) throw new AppError('El usuario ya existe', 400);
   if (existingDni) throw new AppError('El DNI ya existe', 400);
   
@@ -68,20 +65,20 @@ export const registerUserService = async (userData: IUser) => {
 };
 
 export const loginUserService = async (email: string, password: string) => {
-  const userLog = await userRepository.findOne({ where: { email } });
-  if (!userLog) {
+  const user = await userRepository.findOne({ where: { email } });
+  if (!user) {
     throw new AppError('Usuario no encontrado', 401);
   };
-  const userPassw = await comparePasswords(password, userLog.password);
+  const userPassw = await comparePasswords(password, user.password);
  if (!userPassw) {
   throw new AppError('Contraseña incorrecta', 401);
   };
   const token = jwt.sign(
-    { userId: userLog.id, role: userLog.role }, 
+    { userId: user.id, role: user.role }, 
     'secret_key', 
-    { expiresIn: '12h' }
+    { expiresIn: '24h' }
   );
-      return { userLog, token };
+      return { user, token, role: user.role };
 }
 
 

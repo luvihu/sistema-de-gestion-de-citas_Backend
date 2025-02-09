@@ -5,13 +5,14 @@ import { AppError } from '../utils/appError';
 const tokenRepository = AppDataSource.getRepository(User);
 
 const getTokenService = async (userId: string) => {
-  const userToken = await tokenRepository.findOne({
-    where: { id: userId }
+  const user = await tokenRepository.findOne({
+    where: { id: userId },
+    select: [ "id", "name", "email", "role" ]
   });
-  if(!userToken) {
+  if(!user) {
     throw new AppError('Usuario no encontrado', 404);
   }
-  return userToken;
+  return user;
 };
 
 export default getTokenService;
