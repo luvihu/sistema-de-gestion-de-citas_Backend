@@ -4,6 +4,6 @@ import { getDashboard } from '../controllers/dashboardController';
 
 const routerAdmin: Router = Router();
 
-routerAdmin.get('/admin', authMiddleware, isAdmin, getDashboard);
+routerAdmin.get('/', authMiddleware, isAdmin, getDashboard);
 
 export default routerAdmin;

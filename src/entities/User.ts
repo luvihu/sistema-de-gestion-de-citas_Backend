@@ -8,10 +8,14 @@ export class User {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @Column({ length: 100 })
+    @Column({ 
+      length: 100,
+    })
     name: string;
 
-    @Column({ length: 100 })
+    @Column({ 
+      length: 100,
+    })
     lastname: string;
 
     @Column({ length: 8, unique: true })

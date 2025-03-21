@@ -5,7 +5,8 @@ import  getTokenService from "../services/tokenService";
 const getAuthToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.body.userId;
-    const user = await getTokenService(userId);
+    const userIdDecoded = userId.userId;
+    const user = await getTokenService(userIdDecoded);
     if (!user) {
       return next(new AppError('Token no encontrado', 404));
     }

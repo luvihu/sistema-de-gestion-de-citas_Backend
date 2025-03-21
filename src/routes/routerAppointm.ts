@@ -9,6 +9,6 @@ routerAppointm.delete('/:id', authMiddleware, isAdmin, deleteAppointm);
 
 routerAppointm.get('/:id',authMiddleware, getAppointmOnly);
 routerAppointm.post('/schedule',authMiddleware, postAppointm);
-routerAppointm.put('/change', authMiddleware, putAppointm);
+routerAppointm.put('/:id', authMiddleware, putAppointm);
 
 export default routerAppointm;

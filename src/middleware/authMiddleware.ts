@@ -8,16 +8,16 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction):
   }
   try {
     const decoded = jwt.verify(token, 'secret_key') as { id: string; role: string }; // Verifica el token con la clave secreta
-   req.body.userId = decoded.id;  // Aquí asignas el id del usuario decodificado a `req.body.userId`
-   req.body.role = decoded.role;  // Aquí asignas el rol decodificado a `req.body.role` 
-    next();
+   req.body.userId = decoded;  // Aquí asignas usuario decodificado a req.body.userId
+     next();
   } catch (error) {
     return res.status(401).json({ message: 'Token de autenticación inválido' });
   }
 };
 
 export const isAdmin = (req: Request, res: Response, next: NextFunction): any => {
-   if (req.body.role !== 'ADMIN') {
+  const reqAdmin = req.body.userId.role;
+    if (reqAdmin !== 'ADMIN') {
     return res.status(403).json({ message: 'Acceso denegado: se requiere rol de administrador' });
   }
   next();

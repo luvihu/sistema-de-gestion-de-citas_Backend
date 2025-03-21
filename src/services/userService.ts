@@ -1,24 +1,29 @@
 import jwt from 'jsonwebtoken';
 import { User } from '../entities/User';
+import { Doctor } from '../entities/Doctor';
 import { AppDataSource } from '../config/dataSource';
 import { IUser }  from "../interfaces/Interfaces"
 import { AppError } from '../utils/appError';
 import { hashPassword, comparePasswords } from '../utils/passwordUtils';
 
 const userRepository = AppDataSource.getRepository(User);
+const doctorRepository = AppDataSource.getRepository(Doctor);
 
 export const getUserService = async () => {
   const users = await userRepository.find({
       order: { name: 'ASC'},
-    relations: { appointments: true }
-  });
+    relations: { appointments: { doctor: { specialty: true } } },
+    });
   return users;
 }
 
 export const getUserIdService = async (id: string) => {
   const userDelet = await userRepository.findOne({ 
     where: { id }, 
-    relations: { appointments: true } 
+    relations: { 
+      appointments: { doctor: { specialty: true } }
+    },
+    
   });
   if (!userDelet) {
     throw new AppError('Usuario no ubicado',404);
@@ -46,28 +51,51 @@ export const putUserService = async (id: string, userData: Partial<IUser>) => {
 };
 
 export const registerUserService = async (userData: IUser) => {
-  const [ existingUser, existingDni ] = await Promise.all([
-    userRepository.findOne({ where: { email: userData.email } }),
-    userRepository.findOne({ where: { dni: userData.dni } }),
-  ]);
+  // Limpieza y normalización de datos
+  const normalizedData = {
+    name: userData.name.trim(),
+    lastname: userData.lastname.trim(),
+    dni: userData.dni.trim(),
+    telephone: userData.telephone.trim(),
+    photo_profile: userData.photo_profile?.trim(),
+    email: userData.email.trim().toLowerCase(),
+  };
+
+  // Validaciones en paralelo
+  const [existingUser, existingDni ] = await Promise.all([
+    userRepository.findOne({ where: { email: normalizedData.email } }),
+    userRepository.findOne({ where: { dni: normalizedData.dni } }),
+      ]);
+
+  // Validaciones de negocio
   if (existingUser) throw new AppError('El usuario ya existe', 400);
-  if (existingDni) throw new AppError('El DNI ya existe', 400);
-  
-  const newHashPassword = await hashPassword(userData.password);
-   // Creamos el nuevo usuario
+  if (existingDni) throw new AppError('El DNI ya existe', 409);
+   
+  const hashedPassword = await hashPassword(userData.password);
+
   const newUser = userRepository.create({
-    ...userData,
-    password: newHashPassword,
+    ...normalizedData,
+    password: hashedPassword,
     role: userData.role === 'ADMIN' ? 'ADMIN' : 'USER',
   });
-  await userRepository.save(newUser);
-  return newUser;
+
+   // Guardado y retorno con relaciones
+  const savedUser = await userRepository.save(newUser);
+
+ const newUserRepo = await userRepository.findOne({
+    where: { id: savedUser.id },
+    relations: { 
+       appointments: { doctor: { specialty: true } }
+    }
+  });
+  return newUserRepo;
 };
 
-export const loginUserService = async (email: string, password: string) => {
-  const user = await userRepository.findOne({ where: { email } });
+
+export const loginUserService = async (cleanEmail: string, password: string) => {
+  const user = await userRepository.findOne({ where: { email: cleanEmail } });
   if (!user) {
-    throw new AppError('Usuario no encontrado', 401);
+    throw new AppError('Usuario no encontrado', 404);
   };
   const userPassw = await comparePasswords(password, user.password);
  if (!userPassw) {
@@ -78,6 +106,8 @@ export const loginUserService = async (email: string, password: string) => {
     'secret_key', 
     { expiresIn: '24h' }
   );
+  console.log("Rol asignado al usuario:", user.role);
+
       return { user, token, role: user.role };
 }
 

@@ -42,11 +42,10 @@ export const postSpecialty: RequestHandler = async (req: Request, res: Response,
     if(specialtyData.name.length < 3) {
        return next(new AppError('El nombre debe tener al menos 3 caracteres', 400));
      };
-    if(!/^[a-zA-Z\s]+$/.test(specialtyData.name)) {
+    if(!/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/.test(specialtyData.name)) {
        return next(new AppError('El nombre solo puede contener letras y espacios', 400));
      };
-     //validar que tenga tildes
-   };
+    };
    if(specialtyData.description) {
      if(specialtyData.description.length < 20) {
        return next(new AppError('La descripción debe tener al menos 20 caracteres', 400));

@@ -1,8 +1,7 @@
 import { AppDataSource } from "../config/dataSource";
 import { Specialty } from "../entities/Specialty";
-import { postSpecialtyService } from "./specialtyService";
 import { Doctor } from "../entities/Doctor";
-import { IDoctor, ISpecialty } from "../interfaces/Interfaces";
+import { IDoctor } from "../interfaces/Interfaces";
 import { AppError } from "../utils/appError";
 
 const doctorRepository = AppDataSource.getRepository(Doctor);
@@ -10,9 +9,11 @@ const specialtyRepository = AppDataSource.getRepository(Specialty);
 
 export const getDoctorServices = async (): Promise<Doctor[]> => {
  const doctorRepo = await doctorRepository.find({
-  relations: { specialty: true, appointments: true },
-  select: { specialty: { name: true } }
-    });
+  relations: { 
+    specialty: true, 
+    appointments: true,
+  },
+ });
  return doctorRepo;
 
 };
@@ -20,23 +21,26 @@ export const getIdDoctorServices = async (id: string) => {
  const getIdRepo= await doctorRepository.findOne({ 
   where: { id }, 
   relations: { specialty: true, appointments: true },
-  select: { specialty: { name: true }, appointments: { status: true, date: true, hour: true } }
+  select: { 
+  specialty: { name: true }, 
+  appointments: { status: true, date: true, hour: true }
+  }
 });
  return getIdRepo;
 };
 export const postDoctorServices = async (doctorData: IDoctor) => {
- const doctorExist = await doctorRepository.findOneBy({ email: doctorData.email });
+  const doctorExist = await doctorRepository.findOneBy({ email: doctorData.email });
  if (doctorExist) {
   throw new AppError('El correo electrónico ya está registrado', 400);
 }
 
   const specialtId = await specialtyRepository.findOne({
-   where: { id: doctorData.id_specialty }
+   where: { id: doctorData.id_specialty },
   });
   if (!specialtId) {
    throw new AppError('Especialidad no encontrada', 404);
   }
- 
+  
  const newDoctorServices = doctorRepository.create({
   name: doctorData.name,
   lastname: doctorData.lastname,
@@ -54,8 +58,9 @@ export const postDoctorServices = async (doctorData: IDoctor) => {
  
  const doctorRelations = await doctorRepository.findOne({
   where: { id: saveData.id },
-  relations: { specialty: true, appointments: true },
-  select: { specialty: { name: true }}
+  relations: { specialty: true, appointments: true
+  },
+  
  });
  return doctorRelations;
 };
@@ -64,10 +69,11 @@ export const putDoctorServices = async (id: string, doctorData: Partial<IDoctor>
   if (!doctorExist) {
    throw new AppError('Doctor no encontrado', 404);
   };
-  const specialtId = await specialtyRepository.findOne({
+  const specialtObjet = await specialtyRepository.findOne({
    where: { id: doctorData.id_specialty }
   });
-  if (!specialtId) {
+  console.log('doctorServices, specialId',specialtObjet);
+  if (!specialtObjet) {
    throw new AppError('Especialidad no encontrada', 404);
   };
   const updateDoctor = doctorRepository.merge(doctorExist, {
@@ -79,13 +85,13 @@ export const putDoctorServices = async (id: string, doctorData: Partial<IDoctor>
    email: doctorData.email,
    active: doctorData.active,
    });
-    updateDoctor.specialty = specialtId;
+    updateDoctor.specialty = specialtObjet;
     const saveData = await doctorRepository.save(updateDoctor);
+    console.log('doctorSave',updateDoctor);
     const doctorRelations = await doctorRepository.findOne({
      where: { id: saveData.id },
      relations: { specialty: true, appointments: true },
-     select: { specialty: { name: true }}
-    });
+     });
     return doctorRelations
 
 };

@@ -13,7 +13,7 @@ export const getAppointmService = async () =>  {
  const appointService = await appointmentsRepository.find({
    relations: {
      user: true,
-     doctor: true
+     doctor: { specialty: true},
    },
     select: {
      user: {
@@ -26,10 +26,8 @@ export const getAppointmService = async () =>  {
        name: true,
        lastname: true,
        active: true,
-       specialty: {
-        name: true
-       },
-     },
+      },
+     
     }
  });
  return appointService;
@@ -46,6 +44,18 @@ export const postAppointmService = async (appointData: IAppointment) =>  {
   if(!userExist) throw new AppError("El usuario no existe",404);
   const doctorExist = await doctorsRepository.findOneBy({ id: appointData.id_doctor });
   if(!doctorExist) throw new AppError("El doctor no existe",404);
+  const existingAppointment = await appointmentsRepository.findOne({
+    where: {
+      date: appointData.date,
+      hour: appointData.hour,
+      doctor: { id: appointData.id_doctor }, 
+      user: { id: appointData.id_user }
+    }
+  });
+  
+  if (existingAppointment) {
+    throw new AppError("Ya tienes una cita con este doctor a la misma hora y fecha", 400);
+  }
   
   const appoint: Appointment = appointmentsRepository.create({
     status: appointData.status,
@@ -54,6 +64,7 @@ export const postAppointmService = async (appointData: IAppointment) =>  {
   });
   appoint.user = userExist;
   appoint.doctor = doctorExist;
+    
   const appointSave = await appointmentsRepository.save(appoint);
 
   const appointRelation = await appointmentsRepository.findOne({
@@ -94,7 +105,7 @@ export const putAppointmService = async (change: Partial<IAppointment>) =>  {
 export const deleteAppointmService = async (id:string) =>  {
   const appoint = await appointmentsRepository.findOneBy({ id, });
   if(!appoint) throw new AppError("El turno de cita médica no existe",404);
-  await appointmentsRepository.delete(appoint);
+  await appointmentsRepository.remove(appoint);
   return appoint;
   
 }

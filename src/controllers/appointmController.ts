@@ -35,14 +35,6 @@ export const postAppointm: RequestHandler = async (req: Request, res: Response, 
   const appointmentDate = new Date(appointData.date);
   if(appointmentDate < currentDate) throw new AppError("La fecha ingresada es menor a la fecha actual",404);
   
-// const currentTime = new Date();
-// const currentHour = currentTime.getHours();
-// const currentMinutes = currentTime.getMinutes();
-// Convierte la hora actual a formato 'HH:mm'
-// const currentFormattedTime = `${currentHour.toString().padStart(2, '0')}:${currentMinutes.toString().padStart(2, '0')}`;
-  // if(appointData.hour < currentFormattedTime ) throw new AppError("La hora ingresada es menor a la hora actual",404);
-  // esto para ya usarlo en produccion, porque no deja crear turnos en el pasado
-
   const appoint = await postAppointmService(appointData);
   if(!appoint) return next(new AppError("No se pudo crear el turno de cita médica",404));
   sendSuccessResponse(res, appoint);

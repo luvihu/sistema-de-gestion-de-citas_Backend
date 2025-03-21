@@ -29,9 +29,39 @@ export const getAllUsers = async (): Promise<IUser[]> => {
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userData: IUser = req.body;
-    if (!userData.name || !userData.lastname || !userData.dni || !userData.telephone || !userData.email || !userData.password) {
-      return next(new AppError('Todos los campos son obligatorios', 400));
+    // Capitalizar primera letra del nombre y apellido y pasar a minúscula el resto, 
+    if (userData.name) {
+      userData.name = userData.name.trim().charAt(0).toUpperCase() + userData.name.trim().slice(1).toLowerCase();
+    };
+    
+    if (userData.lastname) {
+      userData.lastname = userData.lastname.trim().charAt(0).toUpperCase() + userData.lastname.trim().slice(1).toLowerCase();
+    };
+    if (userData.email) {
+      userData.email = userData.email.trim().toLowerCase();
+    };
+   
+    if (userData.email) {
+      userData.email = userData.email.trim();
     }
+
+    if (userData.dni) {
+      userData.dni = userData.dni.trim();
+    }
+
+    if (userData.telephone) {
+      userData.telephone = userData.telephone.trim();
+    }
+ 
+    if (!userData.name?.trim() || 
+        !userData.lastname?.trim() || 
+        !userData.dni?.trim() || 
+        !userData.telephone?.trim() || 
+        !userData.email?.trim() || 
+        !userData.password) {
+      return next(new AppError('Todos los campos son obligatorios y no pueden estar vacíos', 400));
+    };
+    
     const newUser = await registerUserService(userData);
     if (!newUser) {
       return next(new AppError('Error al registrar usuario', 500));
@@ -47,10 +77,13 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
 export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
 try {
   const { email, password } = req.body;
-  if (!email || !password) {
+  // Limpieza del email
+  const cleanEmail = email?.toLowerCase();
+  const cleanPassword = password?.trim();
+  if (!cleanEmail || !cleanPassword) {
     return next(new AppError('Email y contraseña son requeridos', 400));
   };
-  const userLog = await loginUserService(email, password);
+  const userLog = await loginUserService(cleanEmail, cleanPassword);
   if(!userLog) {
     return next(new AppError('Credenciales inválidas', 401));
   };
