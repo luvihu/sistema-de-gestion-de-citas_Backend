@@ -21,13 +21,8 @@ export const getAppointmService = async () =>  {
        lastname: true,
        email: true,
        telephone: true,
-     },
-     doctor: {
-       name: true,
-       lastname: true,
-       active: true,
-      },
-     
+     }
+    
     }
  });
  return appointService;
