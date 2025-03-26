@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon src/devServer.ts",
     "build": "tsc",
-    "start": "node api/index.js",
+    "start": "node dist/api/index.js",
     "vercel-build": "npm run build",
     "lint": "eslint . --ext .ts",
     "test": "jest --coverage"

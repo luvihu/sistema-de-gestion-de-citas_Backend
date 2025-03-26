@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { AppDataSource } from '../src/config/dataSource';
-import app from '../src/server';
+import { AppDataSource } from '../config/dataSource';
+import app from '../server';
 
 // Inicializa TypeORM una sola vez (reutiliza conexiones)
 let initialized = false;
