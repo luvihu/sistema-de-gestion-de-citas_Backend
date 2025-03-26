@@ -11,9 +11,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cors());
 app.use(morgan('dev'));
 app.use(router);
-
 app.use(errorHandler);
-
 
 export default app;
 
