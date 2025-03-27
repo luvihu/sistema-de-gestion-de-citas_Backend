@@ -4,13 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/devServer.ts",
+    "dev": "nodemon --exec ts-node src/devServer.ts",
     "build": "tsc",
     "start": "node dist/api/index.js",
-    "vercel-build": "npm run build",
-    "lint": "eslint . --ext .ts",
-    "test": "jest --coverage"
-  },
+    "vercel-build": "npm run build"
+   },
   "keywords": [],
   "author": "",
   "license": "ISC",
