@@ -20,6 +20,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     }
   }
 
-  // Pasa el control a Express
+  // Pasa el control a Express para manejar las solicitudes
   return app(req, res);
 };
