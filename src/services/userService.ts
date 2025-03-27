@@ -103,7 +103,7 @@ export const loginUserService = async (cleanEmail: string, password: string) => 
   };
   const token = jwt.sign(
     { userId: user.id, role: user.role }, 
-    'secret_key', 
+    process.env.JWT_SECRET as string, 
     { expiresIn: '24h' }
   );
   console.log("Rol asignado al usuario:", user.role);
@@ -112,3 +112,9 @@ export const loginUserService = async (cleanEmail: string, password: string) => 
 }
 
 
+// Código actual con clave hardcodeada
+// const token = jwt.sign(
+//   { userId: user.id, role: user.role },
+//   'secret_key',
+//   { expiresIn: '24h' }
+// );
