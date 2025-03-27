@@ -1,14 +1,18 @@
 import { DataSource } from "typeorm";
 import "dotenv/config";
+import { User } from "../entities/User";
+import { Specialty } from "../entities/Specialty";
+import { Doctor } from "../entities/Doctor";
+import { Appointment } from "../entities/Appointment";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  url: process.env.DATABASE_URL,
+  host: process.env.DATABASE_URL,
   ssl: true,
   extra: {
     ssl: process.env.VERCEL ? { rejectUnauthorized: false } : false
   },
-  entities: ["src/entities/*.ts"],
+  entities: [User, Specialty, Doctor, Appointment],
   synchronize: false, // ¡Importante en producción!
   poolSize: 5,       // Optimiza para serverless
 });
