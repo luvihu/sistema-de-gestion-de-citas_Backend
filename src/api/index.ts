@@ -13,7 +13,10 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       initialized = true;
     } catch (error) {
       console.error('DB connection failed:', error);
-      return res.status(500).json({ error: 'Database connection failed' });
+      return res.status(500).json({ 
+        error: 'Database connection failed',
+        details: String(error)
+   });
     }
   }
 
