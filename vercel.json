@@ -6,6 +6,6 @@
     "config": { "maxLambdaSize": "10mb" }
     }],
   "routes": [
-    { "src": "/api/(.*)", "dest": "src/api/index.ts" }
+    { "src": "/(.*)", "dest": "src/api/index.ts" }
   ]
 }
