@@ -7,10 +7,13 @@ import { Appointment } from "../entities/Appointment";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: process.env.DATABASE_URL,
-  ssl: true,
+  url: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === "production", // true solo en producción
   extra: {
-    ssl: process.env.VERCEL ? { rejectUnauthorized: false } : false
+    ssl: 
+      process.env.NODE_ENV === "production" 
+        ? { rejectUnauthorized: false } // Solo para producción
+        : false, // Desactiva SSL localmente
   },
   entities: [User, Specialty, Doctor, Appointment],
   synchronize: false, // ¡Importante en producción!
