@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
   ssl: isProduction ? { rejectUnauthorized: false } : false,
   extra: isProduction ? { ssl: { rejectUnauthorized: false } } : undefined,
   entities: [User, Specialty, Doctor, Appointment],
-  synchronize: false, // ¡Importante en producción!
+  synchronize: false, // Importante en producción
   poolSize: 5,       // Optimiza para serverless
 });
 
