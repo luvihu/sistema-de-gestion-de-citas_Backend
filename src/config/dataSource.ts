@@ -5,13 +5,12 @@ import { Specialty } from "../entities/Specialty";
 import { Doctor } from "../entities/Doctor";
 import { Appointment } from "../entities/Appointment";
 
-const isProduction = process.env.NODE_ENV === "production";
-
 export const AppDataSource = new DataSource({
   type: "postgres",
   url: process.env.DATABASE_URL,
-  ssl: true,
-  extra: isProduction ? { ssl: { rejectUnauthorized: false } } : undefined,
+  ssl: process.env.NODE_ENV === "production"
+    ? { rejectUnauthorized: false }  // SSL en producción
+    : false,
   entities: [User, Specialty, Doctor, Appointment],
   synchronize: false, // Importante en producción
   poolSize: 5,       // Optimiza para serverless
