@@ -8,18 +8,30 @@ let initialized = false;
 export default async (req: VercelRequest, res: VercelResponse) => {
   if (!initialized) {
     try {
-      await AppDataSource.initialize();
-      console.log('Database connected (Serverless)');
+      // Verificar si ya está inicializado para evitar múltiples intentos
+      if (!AppDataSource.isInitialized) {
+        await AppDataSource.initialize();
+        console.log('Database connected (Serverless)');
+      }
       initialized = true;
     } catch (error) {
       console.error('DB connection failed:', error);
-      return res.status(500).json({ 
+      return res.status(500).json({
         error: 'Database connection failed',
-        details: String(error)
-   });
+        details: process.env.NODE_ENV === 'production' ? 'Database error' : String(error)
+      });
     }
   }
 
-  // Pasa el control a Express para manejar las solicitudes
-  return app(req, res);
+  // Manejo de errores durante la ejecución
+  try {
+    // Pasa el control a Express para manejar las solicitudes
+    return app(req, res);
+  } catch (error) {
+    console.error('Request handling error:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+      details: process.env.NODE_ENV === 'production' ? 'Server error' : String(error)
+    });
+  }
 };
