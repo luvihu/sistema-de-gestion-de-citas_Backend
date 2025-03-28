@@ -10,7 +10,7 @@ const isProduction = process.env.NODE_ENV === "production";
 export const AppDataSource = new DataSource({
   type: "postgres",
   url: process.env.DATABASE_URL,
-  ssl: isProduction ? { rejectUnauthorized: false } : false,
+  ssl: true,
   extra: isProduction ? { ssl: { rejectUnauthorized: false } } : undefined,
   entities: [User, Specialty, Doctor, Appointment],
   synchronize: false, // Importante en producción
