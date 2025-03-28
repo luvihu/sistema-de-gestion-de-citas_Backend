@@ -7,13 +7,20 @@ import { Appointment } from "../entities/Appointment";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  url: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === "production"
-    ? { rejectUnauthorized: false }  // SSL en producción
-    : false,
+  host: process.env.DB_HOST,  // Usa host en lugar de URL
+  port: Number(process.env.DB_PORT) || 5432,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  ssl: process.env.SSL === "true"
+    ? { rejectUnauthorized: false } // SSL en producción
+    : undefined, // Sin SSL en desarrollo
   entities: [User, Specialty, Doctor, Appointment],
-  synchronize: false, // Importante en producción
-  poolSize: 5,       // Optimiza para serverless
+  synchronize: false, 
+  extra: {
+    max: 5,  // Máximo de conexiones abiertas
+    connectionTimeoutMillis: 5000,  // Timeout en ms
+  },
 });
 
 
