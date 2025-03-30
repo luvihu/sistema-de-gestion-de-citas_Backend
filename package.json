@@ -8,15 +8,15 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "vercel-build": "npm run build"
-   },
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
-    "@types/jsonwebtoken": "^9.0.7",
+    "@types/express": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.10.2",
     "@vercel/node": "^5.1.14",
