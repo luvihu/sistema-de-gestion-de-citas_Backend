@@ -22,11 +22,29 @@ declare module 'express' {
   
   export type RequestHandler = (req: Request, res: Response, next: NextFunction) => any;
   
-  export function Router(): any;
-  export function json(): any;
-  export function urlencoded(options: { extended: boolean }): any;
+  // Interfaz para las opciones de urlencoded
+  interface UrlEncodedOptions {
+    extended: boolean;
+    limit?: string | number;
+    // Añade otras propiedades según sea necesario
+  }
   
-  export default function createApplication(): any;
+  // Interfaz para las opciones de json
+  interface JsonOptions {
+    limit?: string | number;
+    // Añade otras propiedades según sea necesario
+  }
+  
+  export function Router(): any;
+  
+  function express(): any;
+  namespace express {
+    export function json(options?: JsonOptions): any;
+    export function urlencoded(options: UrlEncodedOptions): any;
+    export function Router(): any;
+  }
+  
+  export default express;
 }
 
 declare module 'jsonwebtoken' {
