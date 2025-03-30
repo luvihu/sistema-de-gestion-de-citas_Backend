@@ -16,8 +16,8 @@ export const AppDataSource = new DataSource({
   entities: [User, Specialty, Doctor, Appointment],
   synchronize: false, 
   extra: {
-    max: 5,  // Máximo de conexiones abiertas
-    connectionTimeoutMillis: 5000,  // Timeout en ms
+    connectionLimit: 5,  // Reduce la latencia en conexiones repetidas
+    idleTimeoutMillis: 10000,
   },
 });
 
