@@ -32,7 +32,7 @@ declare module 'express' {
   // Interfaz para las opciones de json
   interface JsonOptions {
     limit?: string | number;
-    // Añade otras propiedades según sea necesario
+    // Añade otras propiedades según sea necesari
   }
   
   export function Router(): any;
