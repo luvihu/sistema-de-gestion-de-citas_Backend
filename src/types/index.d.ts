@@ -1,10 +1,14 @@
 // Declaraciones para módulos sin tipos
 declare module 'express' {
+  import { IncomingHttpHeaders } from 'http';
+  
   export interface Request {
     body: any;
     params: any;
     query: any;
-    headers: any;
+    headers: IncomingHttpHeaders & {
+      authorization?: string;
+    };
     user?: any;
   }
   
@@ -14,13 +18,9 @@ declare module 'express' {
     send(data: any): Response;
   }
   
-  export interface NextFunction {
-    (err?: any): void;
-  }
+  export type NextFunction = (err?: any) => void;
   
-  export interface RequestHandler {
-    (req: Request, res: Response, next: NextFunction): any;
-  }
+  export type RequestHandler = (req: Request, res: Response, next: NextFunction) => any;
   
   export function Router(): any;
   export function json(): any;
@@ -59,4 +59,50 @@ declare module 'bcryptjs' {
   export function genSalt(rounds?: number): Promise<string>;
   export function hash(data: string, salt: string | number): Promise<string>;
   export function compare(data: string, encrypted: string): Promise<boolean>;
+}
+
+// Interfaces personalizadas para tus modelos
+interface IUser {
+  id?: string;
+  name: string;
+  lastname: string;
+  email: string;
+  password: string;
+  telephone: string;
+  role: string;
+}
+
+interface IDoctor {
+  id?: string;
+  name: string;
+  lastname: string;
+  days_atention: string[];
+  hours_attention: string[];
+  telephone: string;
+  email: string;
+  active: boolean;
+  id_specialty: string;
+  specialty?: any;
+}
+
+interface ISpecialty {
+  id?: string;
+  name: string;
+  description: string;
+}
+
+interface IAppointment {
+  id?: string;
+  date: string;
+  hour: string;
+  status: string;
+  id_user?: string;
+  id_doctor?: string;
+  user?: any;
+  doctor?: any;
+}
+
+// Corrección para Number.parseInt
+interface NumberConstructor {
+  parseInt(string: string, radix?: number): number;
 }
