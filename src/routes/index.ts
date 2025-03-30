@@ -6,7 +6,7 @@ import routerSpecialty from './routerSpecialty';
 import routerAdmin from './routerAdmin';
 import routerAuth from './routerAuth';
 
-const router: Router = Router();
+const router = Router();
 
 router.use('/admin', routerAdmin);
 router.use('/users', routerUser);

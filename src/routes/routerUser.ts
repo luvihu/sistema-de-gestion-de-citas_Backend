@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { getUser, registerUser, loginUser,  getUserId, deleteUser, putUser } from '../controllers/userController';
 import { authMiddleware, isAdmin } from '../middleware/authMiddleware';
-const routerUser: Router = Router();
+const routerUser = Router();
 
 routerUser.get('/', authMiddleware, isAdmin, getUser);
 

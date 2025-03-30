@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { getDoctor, getIdDoctor, postDoctor, putDoctor, deleteDoctor } from "../controllers/doctorController";
 import { authMiddleware, isAdmin } from "../middleware/authMiddleware";
-const routerDoctor: Router = Router();
+const routerDoctor = Router();
 
 routerDoctor.get('/',authMiddleware, getDoctor)
 routerDoctor.get('/:id',authMiddleware, getIdDoctor)
