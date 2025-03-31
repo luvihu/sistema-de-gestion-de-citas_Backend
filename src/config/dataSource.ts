@@ -4,38 +4,20 @@ import { User } from "../entities/User";
 import { Specialty } from "../entities/Specialty";
 import { Doctor } from "../entities/Doctor";
 import { Appointment } from "../entities/Appointment";
-import { Pool } from 'pg';
-
-// Crear un pool de conexiones primero
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  },
-  max: 5
-});
-
-// Verificar que el pool funciona
-pool.query('SELECT NOW()', (err, res) => {
-  if (err) {
-    console.error('Error al conectar con pool:', err);
-  } else {
-    console.log('Conexión exitosa con pool:', res.rows[0]);
-  }
-});
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  url: process.env.DATABASE_URL,
-  ssl: true,
+  host: process.env.POSTGRES_HOST,  // Ej: "pg.tuproyecto.supabase.co" (pooler)
+  port: Number(process.env.POSTGRES_PORT) || 5432,  // 5432 o 6543 para pooler
+  username: "postgres",
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DATABASE || "postgres",
+  ssl: { rejectUnauthorized: false },  // Necesario
   entities: [User, Specialty, Doctor, Appointment],
   synchronize: false,
   extra: {
-    ssl: {
-      rejectUnauthorized: false,
-    },
-    max: 5, // máximo de conexiones en el pool
-    connectionTimeoutMillis: 30000 // tiempo de espera aumentado
+    connectionLimit: 5,
+    connectionTimeoutMillis: 10000,
   },
 });
 
