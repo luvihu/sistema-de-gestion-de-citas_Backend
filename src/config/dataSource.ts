@@ -7,17 +7,17 @@ import { Appointment } from "../entities/Appointment";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: process.env.POSTGRES_HOST,  // Ej: "pg.tuproyecto.supabase.co" (pooler)
-  port: Number(process.env.POSTGRES_PORT) || 5432,  // 5432 o 6543 para pooler
-  username: "postgres",
+  host: process.env.POSTGRES_HOST, // "aws-0-sa-east-1.pooler.supabase.com"
+  port: Number(process.env.POSTGRES_PORT) || 6543,
+  username: process.env.POSTGRES_USER, // "postgres.jztdxoixayvdlskcnfkd"
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DATABASE || "postgres",
-  ssl: { rejectUnauthorized: false },  // Necesario
+  ssl: { rejectUnauthorized: false }, // Obligatorio
   entities: [User, Specialty, Doctor, Appointment],
   synchronize: false,
   extra: {
-    connectionLimit: 5,
     connectionTimeoutMillis: 10000,
+    max: 5, // Límite de conexiones
   },
 });
 
