@@ -7,19 +7,44 @@ import { Appointment } from "../entities/Appointment";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: process.env.POSTGRES_HOST,  // Usa host en lugar de URL
-  port: 5432,
-  username: "postgres",
-  password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DATABASE || "postgres",
-  ssl:{ rejectUnauthorized: false },
+  url: process.env.DATABASE_URL, // Usa la URL completa de conexión
+  ssl: true,
   entities: [User, Specialty, Doctor, Appointment],
-  synchronize: false, 
+  synchronize: false,
   extra: {
-    connectionLimit: 5,  // Reduce la latencia en conexiones repetidas
-    connectionTimeoutMillis: 10000,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+    // Forzar IPv4
+    family: 4
   },
 });
+
+
+
+
+// import { DataSource } from "typeorm";
+// import "dotenv/config";
+// import { User } from "../entities/User";
+// import { Specialty } from "../entities/Specialty";
+// import { Doctor } from "../entities/Doctor";
+// import { Appointment } from "../entities/Appointment";
+
+// export const AppDataSource = new DataSource({
+//   type: "postgres",
+//   host: process.env.POSTGRES_HOST,  // Usa host en lugar de URL
+//   port: 5432,
+//   username: "postgres",
+//   password: process.env.POSTGRES_PASSWORD,
+//   database: process.env.POSTGRES_DATABASE || "postgres",
+//   ssl:{ rejectUnauthorized: false },
+//   entities: [User, Specialty, Doctor, Appointment],
+//   synchronize: false, 
+//   extra: {
+//     connectionLimit: 5,  // Reduce la latencia en conexiones repetidas
+//     connectionTimeoutMillis: 10000,
+//   },
+// });
 
 
 
