@@ -4,10 +4,29 @@ import { User } from "../entities/User";
 import { Specialty } from "../entities/Specialty";
 import { Doctor } from "../entities/Doctor";
 import { Appointment } from "../entities/Appointment";
+import { Pool } from 'pg';
+
+// Crear un pool de conexiones primero
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  },
+  max: 5
+});
+
+// Verificar que el pool funciona
+pool.query('SELECT NOW()', (err, res) => {
+  if (err) {
+    console.error('Error al conectar con pool:', err);
+  } else {
+    console.log('Conexión exitosa con pool:', res.rows[0]);
+  }
+});
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  url: process.env.DATABASE_URL, // Usa la URL completa de conexión
+  url: process.env.DATABASE_URL,
   ssl: true,
   entities: [User, Specialty, Doctor, Appointment],
   synchronize: false,
@@ -15,8 +34,8 @@ export const AppDataSource = new DataSource({
     ssl: {
       rejectUnauthorized: false,
     },
-    // Forzar IPv4
-    family: 4
+    max: 5, // máximo de conexiones en el pool
+    connectionTimeoutMillis: 30000 // tiempo de espera aumentado
   },
 });
 
