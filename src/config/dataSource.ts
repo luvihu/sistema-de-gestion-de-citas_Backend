@@ -7,17 +7,17 @@ import { Appointment } from "../entities/Appointment";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: process.env.DB_HOST,  // Usa host en lugar de URL
-  port: parseInt(process.env.DB_PORT || "5432"),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: process.env.POSTGRES_HOST,  // Usa host en lugar de URL
+  port: 5432,
+  username: "postgres",
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DATABASE || "postgres",
   ssl:{ rejectUnauthorized: false },
   entities: [User, Specialty, Doctor, Appointment],
   synchronize: false, 
   extra: {
     connectionLimit: 5,  // Reduce la latencia en conexiones repetidas
-    idleTimeoutMillis: 10000,
+    connectionTimeoutMillis: 10000,
   },
 });
 
