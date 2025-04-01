@@ -10,7 +10,7 @@ app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cors({
   origin: [
-    'https://sistema-de-gestion-de-citas-frontend.vercel.app/',
+    'https://clinicacitas.vercel.app',
     'http://localhost:5173'
   ],
   credentials: true
