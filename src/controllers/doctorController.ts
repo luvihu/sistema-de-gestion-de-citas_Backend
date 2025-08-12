@@ -58,7 +58,6 @@ export const putDoctor: RequestHandler = async (req: Request, res: Response, nex
     return next(new AppError('No se recibieron datos para actualizar', 400));
   }
   const doctorUpdate = await putDoctorServices(id, doctorDataP);
-  console.log('doctorUpdate, controller',doctorUpdate);
   if(!doctorUpdate) {
     return next(new AppError('No se pudo actualizar el doctor', 500));
   };

@@ -72,8 +72,7 @@ export const putDoctorServices = async (id: string, doctorData: Partial<IDoctor>
   const specialtObjet = await specialtyRepository.findOne({
    where: { id: doctorData.id_specialty }
   });
-  console.log('doctorServices, specialId',specialtObjet);
-  if (!specialtObjet) {
+   if (!specialtObjet) {
    throw new AppError('Especialidad no encontrada', 404);
   };
   const updateDoctor = doctorRepository.merge(doctorExist, {
@@ -87,7 +86,6 @@ export const putDoctorServices = async (id: string, doctorData: Partial<IDoctor>
    });
     updateDoctor.specialty = specialtObjet;
     const saveData = await doctorRepository.save(updateDoctor);
-    console.log('doctorSave',updateDoctor);
     const doctorRelations = await doctorRepository.findOne({
      where: { id: saveData.id },
      relations: { specialty: true, appointments: true },

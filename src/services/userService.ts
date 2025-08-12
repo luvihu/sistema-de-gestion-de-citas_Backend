@@ -106,15 +106,6 @@ export const loginUserService = async (cleanEmail: string, password: string) => 
     process.env.JWT_SECRET as string, 
     { expiresIn: '24h' }
   );
-  console.log("Rol asignado al usuario:", user.role);
-
-      return { user, token, role: user.role };
+    return { user, token, role: user.role };
 }
 
-
-// Código actual con clave hardcodeada
-// const token = jwt.sign(
-//   { userId: user.id, role: user.role },
-//   'secret_key',
-//   { expiresIn: '24h' }
-// );

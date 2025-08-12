@@ -16,15 +16,6 @@ export const getUser: RequestHandler = async (req: Request, res: Response, next:
     return next(error);
   }
 };
-// solo  para el dashboard
-export const getAllUsers = async (): Promise<IUser[]> => {
-  try {
-    const users = await getUserService();
-    return users;
-  } catch (error) {
-    throw error;
-  }
-};
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {

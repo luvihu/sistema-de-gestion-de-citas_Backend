@@ -79,7 +79,7 @@ export const AppDataSource = new DataSource({
 //   password: process.env.DB_PASSWORD,
 //   database: process.env.DB_NAME,
 //   dropSchema: false, // Solo para desarrollo limpia la DB antes de crear las tablas
-//   synchronize: true,
+//   synchronize: true,  // solo para desarrollo, en producccion es false
 //   logging: false,
 //   entities: [User, Specialty, Doctor, Appointment],
 //   subscribers: [],
